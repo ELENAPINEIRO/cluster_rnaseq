@@ -45,19 +45,19 @@ levels_colors <- setNames(lapply(names(levels_colors), function(y) {
   levels_colors[[y]][names(levels_colors[[y]]) %in% unique(coldata[[y]])]
 }), names(levels_colors))
 
-# Euclidean sample distances
-sampleDist <- as.matrix(dist(t(assay(vsd[, samples])), method = "euclidean"))
+# Pearson correlation sample distances
+sampleDist <- as.matrix(cor(assay(vsd[, samples]), method = "pearson"))
 
 # Colors
-colors <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+colors <- colorRampPalette(brewer.pal(9, "Blues"))(255)
 
 # Heatmaps
 pdf(snakemake@output[["pdf"]], width = 9, height = 7)
-pheatmap(sampleDist, name = "Euclidean Distance", color = colors, 
+pheatmap(sampleDist, name = "Pearson correlation", color = colors, 
          annotation_col = coldata, annotation_colors = levels_colors)
 dev.off()
 
 png(snakemake@output[["png"]], width = 9, height = 7, units = "in", res = 600)
-pheatmap(sampleDist, name = "Euclidean Distance", color = colors,
+pheatmap(sampleDist, name = "Pearson correlation", color = colors,
          annotation_col = coldata, annotation_colors = levels_colors)
 dev.off()
